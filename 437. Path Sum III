@@ -1,0 +1,19 @@
+int CountPath(struct TreeNode* node, int targetSum, long long currentSum) {
+    if (node == NULL) {
+        return 0;
+    }
+    currentSum += node->val;
+    int paths = (currentSum == targetSum);
+    paths += CountPath(node->left, targetSum, currentSum);
+    paths += CountPath(node->right, targetSum, currentSum);
+    return paths;
+}
+int pathSum(struct TreeNode* root, int targetSum) {
+    if (root == NULL) {
+        return 0;
+    }
+    int paths = CountPath(root, targetSum, 0);
+    paths += pathSum(root->left, targetSum);
+    paths += pathSum(root->right, targetSum);
+    return paths;
+}
