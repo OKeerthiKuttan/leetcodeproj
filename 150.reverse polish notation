@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+struct node { 
+    int data; 
+    struct node* next; 
+};
+
+struct node* top = NULL;
+
+void push(int data) {
+    struct node* newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = data;
+    newnode->next = top;
+    top = newnode;
+}
+
+int pop() {
+    if (top == NULL) {
+        printf("underflow");
+        return -1; // Return an error value since it's missing in the original code
+    } else {
+        int poppedData = top->data;
+        top = top->next;
+        printf("the deleted element: %d\n", poppedData);
+        return poppedData;
+    }
+}
+
+int evalRPN(char** arr, int tokensSize) {
+    int i = 0;
+    while (i < tokensSize) {
+        if (arr[i][0] == ' ') {
+            i++;
+            continue;
+        }
+
+        if (isdigit(arr[i][0]) || (arr[i][0] == '-' && isdigit(arr[i][1]))) {
+            int num = atoi(arr[i]);
+            push(num);
+        } else {
+            int b = pop();
+            int a = pop();
+            switch (arr[i][0]) {
+                case '+':
+                    push(a + b);
+                    break;
+                case '-':
+                    push(a - b);
+                    break;
+                case '*':
+                    push(a * b);
+                    break;
+                case '/':
+                    push(a / b);
+                    break;
+            }
+        }
+        i++;
+    }
+    return top->data;
+}
+
